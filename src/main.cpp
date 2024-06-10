@@ -1,5 +1,3 @@
-#include <ncurses.h>
-
 #include <chrono>
 #include <filesystem>
 #include <iostream>

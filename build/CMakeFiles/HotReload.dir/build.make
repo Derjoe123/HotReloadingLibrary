@@ -92,8 +92,6 @@ HotReload_EXTERNAL_OBJECTS =
 
 HotReload: CMakeFiles/HotReload.dir/src/main.cpp.o
 HotReload: CMakeFiles/HotReload.dir/build.make
-HotReload: /usr/lib/x86_64-linux-gnu/libcurses.so
-HotReload: /usr/lib/x86_64-linux-gnu/libform.so
 HotReload: CMakeFiles/HotReload.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/luis/Coding/HotReload/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable HotReload"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/HotReload.dir/link.txt --verbose=$(VERBOSE)
