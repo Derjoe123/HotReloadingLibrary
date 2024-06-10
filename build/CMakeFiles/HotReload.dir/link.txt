@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/HotReload.dir/src/main.cpp.o -o HotReload  -lcurses -lform 
