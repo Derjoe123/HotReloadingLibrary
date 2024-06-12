@@ -1,3 +1,5 @@
+#include <unistd.h>
+
 #include <chrono>
 #include <filesystem>
 #include <iostream>
@@ -10,18 +12,19 @@ int main(int argc, char** argv) {
         std::cerr << "Usage: " << argv[0] << " <library>\n";
         return 1;
     }
-    if (!std::filesystem::exists(argv[0])) {
-        std::cerr << "File does not exist\n";
+    std::string libName = "/" + std::string(argv[1]);
+    if (!std::filesystem::exists(std::filesystem::current_path().string() + libName)) {
+        std::cerr << "File " + std::string(libName) + " does not exist\n";
         return 1;
     }
-    std::string libName = "./" + std::string(argv[1]);
-    dylib lib(libName);
+    dylib lib;
+    lib.open(std::filesystem::current_path().string() + libName.c_str());
     bool* ReturnThread = new bool(false);
     std::thread WatcherThread([&ReturnThread, &lib, &argv, &libName]() {
-        char* StateData = nullptr;
+        void* StateData = nullptr;
         unsigned int StateDataSize = 0;
-        std::function<int(char*, unsigned int&)> OnLoaded = lib.get_function<decltype(defs::OnLoaded)>("OnLoaded");
-        std::function<int(char*, unsigned int&)> OnUnloaded = lib.get_function<decltype(defs::OnUnloaded)>("OnUnloaded");
+        std::function<int(void*, unsigned int&)> OnLoaded = lib.get_function<decltype(defs::OnLoaded)>("OnLoaded");
+        std::function<int(void*, unsigned int&)> OnUnloaded = lib.get_function<decltype(defs::OnUnloaded)>("OnUnloaded");
         if (OnLoaded) {
             int ret = OnLoaded(StateData, StateDataSize);
             if (ret != 0) {
@@ -51,7 +54,7 @@ int main(int argc, char** argv) {
                 }
                 original_time = time;
                 lib.close();
-                lib.open(libName);
+                lib.open(std::filesystem::current_path().string(), libName.c_str());
                 OnLoaded = lib.get_function<decltype(defs::OnLoaded)>("OnLoaded");
                 OnUnloaded = lib.get_function<decltype(defs::OnUnloaded)>("OnUnloaded");
                 if (OnLoaded) {
